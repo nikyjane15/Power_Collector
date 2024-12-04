@@ -15,6 +15,10 @@ def json_to_excel_states(type, counter_type):
     cpus = []
     states = []
 
+    path="/home/ubuntu/Get_time_usage_irl/results_state/"
+    if not os.path.exists(path):
+        os.mkdir("/home/ubuntu/Get_time_usage_irl/results_state/")
+
     for i in range(len(counter_type)):
         timestamps.append(counter_type[i]["timestamp"])
 
@@ -37,6 +41,10 @@ def json_to_excel_cpus(type, counter_type):
     timestamps = []
     cpus = []
     states = []
+
+    path="/home/ubuntu/Get_time_usage_irl/results_cpus/"
+    if not os.path.exists(path):
+        os.mkdir("/home/ubuntu/Get_time_usage_irl/results_cpus/")
 
     for i in range(len(counter_type)):
         timestamps.append(counter_type[i]["timestamp"])
