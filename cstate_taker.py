@@ -1,17 +1,19 @@
 import time
 import os
 import re
+from collections import OrderedDict
+
+from pydantic.v1.schema import schema
+
 from model import State, Time, CPU_Time, maxtime, tstep
 import pandas as pd
+import json
 
 
 def json_to_excel(type, counter_type):
     timestamps = []
     cpus = []
     states = []
-    #
-    # with open('results/time_counter.json', 'r') as f:
-    #     json_file = json.load(f, object_pairs_hook=OrderedDict)
 
     for i in range(len(counter_type)):
         timestamps.append(counter_type[i]["timestamp"])
@@ -28,9 +30,8 @@ def json_to_excel(type, counter_type):
             for k in range(len(states)):
                 a = counter_type[i]["block"][j]["state"][k]["value"]
                 a.rstrip('\n')
-                print(a)
                 df.at[timestamps[i], states[k]] = int(a.rstrip('\n'))
-            filename = "results/" + type + "_" + cpus[j] + ".csv"
+            filename = "/home/ubuntu/Get_time_usage_irl/results/" + type + "_" + cpus[j] + ".csv"
         df.to_csv(filename)
 
 
@@ -71,11 +72,12 @@ for i in range(maxtime):
         temp_time.block.append(cpu_time)
         temp_usage.block.append(cpu_usage)
 
-    counters_time.append(temp_time)
-    counters_usage.append(temp_usage)
+    counters_time.append(temp_time.model_dump(mode='json'))
+    counters_usage.append(temp_usage.model_dump(mode='json'))
     i += tstep
 
-json_to_excel("time",counters_time)
-json_to_excel("usage",counters_usage)
+
+json_to_excel("time", counters_time)
+json_to_excel("usage", counters_usage)
 print("dumps")
 
