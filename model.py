@@ -1,16 +1,25 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from datetime import datetime
+from time import time
+
+tstep = 2
+maxtime = 60
 
 
 class State(BaseModel):
     state: str
     value: str
 
+
 class Time(BaseModel):
     cpu: Optional[str] = Field(default=None)
     state: List[State]
 
+
 class CPU_Time(BaseModel):
-    timestamp: datetime
+    timestamp: int
     block: List[Time]
+
+
+class CPU_result(BaseModel):
+    result: List[CPU_Time]
