@@ -3,7 +3,7 @@ from typing import List, Optional
 from time import time
 
 tstep = 2
-maxtime = 90
+maxtime = 60
 
 
 class State(BaseModel):
