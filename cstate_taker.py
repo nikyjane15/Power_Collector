@@ -1,13 +1,11 @@
-import time
 import os
 import re
+import time
 from collections import OrderedDict
 
-from pydantic.v1.schema import schema
-
-from model import State, Time, CPU_Time, maxtime, tstep
 import pandas as pd
-import json
+
+from model import State, Time, CPU_Time, tstep, maxtime
 
 
 def json_to_excel_states(type, counter_type):
@@ -74,7 +72,7 @@ count = 0
 dir_temp = []
 dir_cpu = []
 f = "/sys/devices/system/cpu"
-for i in range(maxtime):
+while count < maxtime:
     if count == 0:
         p = re.compile(r'\d+')
         dir_temp = sorted([element for element in os.listdir(f) if re.match('cpu\d+', element)])
@@ -106,7 +104,8 @@ for i in range(maxtime):
 
     counters_time.append(temp_time.model_dump(mode='json',context=OrderedDict))
     counters_usage.append(temp_usage.model_dump(mode='json', context=OrderedDict))
-    i += tstep
+    count += 1
+    time.sleep(1.55)
 
 
 json_to_excel_cpus("time", counters_time)
