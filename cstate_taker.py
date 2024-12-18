@@ -77,7 +77,6 @@ while count < maxtime:
         p = re.compile(r'\d+')
         dir_temp = sorted([element for element in os.listdir(f) if re.match('cpu\d+', element)])
         dir_cpu = sorted(dir_temp, key=lambda s: int(re.search(r'\d+', s).group()))
-        count += 1
 
     time.sleep(1.55)
     now_ns = time.time_ns()
@@ -106,6 +105,7 @@ while count < maxtime:
     counters_time.append(temp_time.model_dump(mode='json',context=OrderedDict))
     counters_usage.append(temp_usage.model_dump(mode='json', context=OrderedDict))
     count += 1
+
 
 
 json_to_excel_cpus("time", counters_time)
