@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from time import time
 
+case_0=True
 tstep = 2
 maxtime = 2500
 

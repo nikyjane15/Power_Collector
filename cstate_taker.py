@@ -2,10 +2,20 @@ import os
 import re
 import time
 from collections import OrderedDict
+import requests
 
 import pandas as pd
 
-from model import State, Time, CPU_Time, tstep, maxtime
+from model import State, Time, CPU_Time, tstep, maxtime,case_0
+
+def energies_to_file():
+    if not os.path.exists("home/ubuntu/Get_time_usage_irl/metrics"):
+        os.mkdir("home/ubuntu/Get_time_usage_irl/metrics")
+
+    for index, element in enumerate(raritan_energies):
+        file_name = 'home/ubuntu/Get_time_usage_irl/metrics' + str(timestamp_energy[index]) + '.metric'
+        with open(file_name, 'w') as fp:
+            fp.write(element)
 
 
 def json_to_excel_states(type, counter_type):
@@ -69,6 +79,8 @@ def json_to_excel_cpus(type, counter_type):
 counters_time = []
 counters_usage = []
 count = 0
+raritan_energies = []
+timestamp_energy = []
 dir_temp = []
 dir_cpu = []
 f = "/sys/devices/system/cpu"
@@ -104,10 +116,15 @@ while count < maxtime:
 
     counters_time.append(temp_time.model_dump(mode='json',context=OrderedDict))
     counters_usage.append(temp_usage.model_dump(mode='json', context=OrderedDict))
+    if case_0:
+        r = requests.get("http://192.168.17.28:9950/metrics", verify=False)
+        raritan_energies.append(r.text)
+        timestamp_energy.append(now_ns)
     count += 1
 
 
 
+energies_to_file()
 json_to_excel_cpus("time", counters_time)
 json_to_excel_cpus("usage", counters_usage)
 json_to_excel_states("time", counters_time)
