@@ -2,9 +2,9 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from time import time
 
-case_0=True
+case_0 = True
 tstep = 2
-maxtime = 2500
+maxtime = 10
 
 
 class State(BaseModel):
@@ -24,3 +24,15 @@ class CPU_Time(BaseModel):
 
 class CPU_result(BaseModel):
     result: List[CPU_Time]
+
+
+class Energy(BaseModel):
+    zone: str
+    value: str
+
+
+class List_Zones(BaseModel):
+    timestamp: int
+    powercap: List[Energy]
+
+
