@@ -124,9 +124,10 @@ while count < maxtime:
 
     time.sleep(1.55)
     now_ns = time.time_ns()
+    print('Getting Rapl Energies....')
     temp_energy = List_Zones(timestamp=now_ns, powercap=[])
     for element in dir_energies:
-        f1 = fe + "/" + element + "/energy_uj.txt"
+        f1 = fe + "/" + element + "/energy_uj"
 
         with open(f1, "r") as file:
             temp = file.readlines()
@@ -137,6 +138,7 @@ while count < maxtime:
     now_ns = time.time_ns()
     temp_usage = CPU_Time(timestamp=now_ns, block=[])
     temp_time = CPU_Time(timestamp=now_ns, block=[])
+    print('Getting CPU Usage and Time....')
     for element in dir_cpu:
         f1 = f + "/" + element + "/cpuidle"
         cpu_time = Time(cpu=element, state=[])
@@ -160,6 +162,7 @@ while count < maxtime:
     counters_time.append(temp_time.model_dump(mode='json', context=OrderedDict))
     counters_usage.append(temp_usage.model_dump(mode='json', context=OrderedDict))
     if case_0:
+        print('Getting Raritan metrics....')
         r = requests.get("http://192.168.17.28:9950/metrics", verify=False)
         raritan_energies.append(r.text)
         timestamp_energy.append(now_ns)
@@ -169,6 +172,7 @@ while count < maxtime:
 if case_0:
     energies_to_file()
 
+print('converting to csv files....')
 json_to_excel_cpus("time", counters_time)
 json_to_excel_cpus("usage", counters_usage)
 json_to_excel_states("time", counters_time)
