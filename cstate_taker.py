@@ -8,17 +8,17 @@ import pandas as pd
 
 from model import State, Time, CPU_Time
 from model import Energy, List_Zones
-from model import tstep, maxtime, case_0
+from model import maxtime, case_0
 
 save_path = "/home/ubuntu/Get_time_usage_irl/"
 
 
 def energies_to_file():
-    if not os.path.exists(save_path + "metrics"):
-        os.mkdir(save_path + "metrics")
+    if not os.path.exists(save_path + "metrics/"):
+        os.mkdir(save_path + "metrics/")
 
     for index, element in enumerate(raritan_energies):
-        file_name = save_path + 'metrics' + str(timestamp_energy[index]) + '.metric'
+        file_name = save_path + 'metrics/' + str(timestamp_energy[index]) + '.metric'
         with open(file_name, 'w') as fp:
             fp.write(element)
 
@@ -26,7 +26,6 @@ def energies_to_file():
 def json_to_excel_energies(rapl_ener):
     timestamps = []
     zones = []
-    values = []
 
     path = save_path + "results_rapl_energies/"
     if not os.path.exists(path):
@@ -44,7 +43,8 @@ def json_to_excel_energies(rapl_ener):
             a = rapl_ener[i]["powercap"][k]["value"]
             df.at[timestamps[i], zones[k]] = a
         filename = path + "rapl_energies.csv"
-    df.to_csv(filename, sep=";", index_label="timestamp")
+    #df.to_csv(filename, sep=";", index_label="timestamp")
+    df.to_excel(filename, index_label="timestamp")
 
 
 def json_to_excel_states(type_var, counter_type):
@@ -72,8 +72,8 @@ def json_to_excel_states(type_var, counter_type):
                 a = counter_type[i]["block"][k]["state"][j]["value"]
                 df.at[timestamps[i], cpus[k]] = int(a.rstrip('\n'))
             filename = path + type_var + "_" + states[j] + ".csv"
-        df.to_csv(filename, sep=";", index_label="timestamp")
-
+        #df.to_csv(filename, sep=";", index_label="timestamp")
+        df.to_excel(filename, index_label="timestamp")
 
 def json_to_excel_cpus(type, counter_type):
     timestamps = []
@@ -101,7 +101,8 @@ def json_to_excel_cpus(type, counter_type):
                 a.rstrip('\n')
                 df.at[timestamps[i], states[k]] = int(a.rstrip('\n'))
             filename = path + type + "_" + cpus[j] + ".csv"
-        df.to_csv(filename, sep=";", index_label="timestamp")
+        #df.to_csv(filename, sep=";", index_label="timestamp")
+        df.to_excel(filename, index_label="timestamp")
 
 
 counters_time = []
@@ -118,7 +119,7 @@ fe = "/sys/class/powercap"
 while count < maxtime:
     if count == 0:
         p = re.compile(r'\d+')
-        dir_temp = sorted([element for element in os.listdir(f) if re.match('cpu\d+', element)])
+        dir_temp = sorted([element for element in os.listdir(f) if re.match(r'cpu\d+', element)])
         dir_cpu = sorted(dir_temp, key=lambda s: int(re.search(r'\d+', s).group()))
         dir_energies = sorted([element for element in os.listdir(fe) if element.startswith('intel-rapl') and element.count(':') == 1])
 

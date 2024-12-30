@@ -3,8 +3,7 @@ from typing import List, Optional
 from time import time
 
 case_0 = True
-tstep = 2
-maxtime = 10
+maxtime = 20    #2500 for na hour
 
 
 class State(BaseModel):
